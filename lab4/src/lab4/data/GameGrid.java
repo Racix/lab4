@@ -178,6 +178,7 @@ public class GameGrid extends Observable{
 	}
 	
 	public static void main(String[] args) {
+		
 		GameGrid test = new GameGrid(10);
 		System.out.println(test.isWinner(ME));
 		System.out.println(test.getSize());
