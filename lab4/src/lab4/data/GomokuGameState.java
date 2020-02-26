@@ -80,12 +80,12 @@ public class GomokuGameState extends Observable implements Observer{
 		else {
 			
 			// inte säker att de fungerar   
-			if (gameGrid.move(x, y,gameGrid.ME )==true ){
+			if (gameGrid.move(x, y,GameGrid.ME )==true ){
 				message = "Empty spot no more";
 				setChanged();
 				notifyObservers();
 				currentState = OTHER_TURN;
-				if (gameGrid.isWinner(gameGrid.ME)==true) {
+				if (gameGrid.isWinner(GameGrid.ME)==true) {
 					message = "You won the game"; 
 					setChanged();
 					notifyObservers();
@@ -155,12 +155,36 @@ public class GomokuGameState extends Observable implements Observer{
 	 */
 	public void receivedMove(int x, int y){
 		if (currentState == FINISHED) {
-			
+			message = "YOU CANT MOVE THE GAME IS FINISHED";
 		}
 		else if (currentState == NOT_STARTED) {
+			message = "YOU CANT MOVE WHEN THER IS NO ONGOING GAME";
+		}
+		else if (currentState == MY_TURN) {
+			message = "ITS NOT YOUR TURN";
+		}
+		else {
+			
+			if (gameGrid.move(x, y,GameGrid.OTHER )==true ){
+				message = "Empty spot no more";
+				setChanged();
+				notifyObservers();
+				currentState = OTHER_TURN;
+				if (gameGrid.isWinner(GameGrid.OTHER)==true) {
+					message = "OTHER won the game"; 
+					setChanged();
+					notifyObservers();
+				}
+			}
+			else {
+				message = "ocipide spot";
+				setChanged();
+				notifyObservers();
+			}
+			}
 			
 		}
-	}
+	
 	
 	public void update(Observable o, Object arg) {
 		
