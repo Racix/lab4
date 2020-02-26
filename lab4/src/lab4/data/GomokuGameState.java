@@ -79,8 +79,27 @@ public class GomokuGameState extends Observable implements Observer{
 		}
 		else {
 			
+			// inte säker att de fungerar   
+			if (gameGrid.move(x, y,gameGrid.ME )==true ){
+				message = "Empty spot no more";
+				setChanged();
+				notifyObservers();
+				currentState = OTHER_TURN;
+				if (gameGrid.isWinner(gameGrid.ME)==true) {
+					message = "You won the game"; 
+					setChanged();
+					notifyObservers();
+				}
+			}
+			else {
+				message = "ocipide spot";
+				setChanged();
+				notifyObservers();
+			}
+			}
+			
 		}
-	}
+	
 	
 	/**
 	 * Starts a new game with the current client
