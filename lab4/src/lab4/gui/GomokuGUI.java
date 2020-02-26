@@ -43,7 +43,7 @@ public class GomokuGUI implements Observer{
 		connectButton = new JButton("Connect");
 		newGameButton = new JButton("New Game");
 		disconnectButton = new JButton("Disconnect");
-		messageLabel = new JLabel(gamestate.getMessageString());
+		messageLabel = new JLabel();
 		panel = new JPanel();
 		panel.add(new GamePanel(new GameGrid(10)));
 		panel.add(connectButton);
