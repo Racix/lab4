@@ -12,6 +12,8 @@ import lab4.data.GameGrid;
 
 /**
  * A panel providing a graphical view of the game board
+ * 
+ * @author Abboshon Hamraliev & Adam Joakim Hedberg
  */
 
 public class GamePanel extends JPanel implements Observer{
@@ -70,12 +72,24 @@ public class GamePanel extends JPanel implements Observer{
 	}
 	
 	private void player(Graphics g) {
-		g.drawOval(0,0,UNIT_SIZE,UNIT_SIZE);
+		for(int y = 0; y < grid.getSize();y++) {
+			for(int x = 0; x < grid.getSize();x++) {
+				if(grid.getLocation(x,y) == GameGrid.ME) {
+					g.drawOval(x*UNIT_SIZE,y*UNIT_SIZE,UNIT_SIZE,UNIT_SIZE);
+				} else if(grid.getLocation(x,y) == GameGrid.OTHER) {
+					g.drawLine(x*UNIT_SIZE, y*UNIT_SIZE, x*UNIT_SIZE+UNIT_SIZE, y*UNIT_SIZE+ UNIT_SIZE);
+					g.drawLine(x*UNIT_SIZE+UNIT_SIZE, y*UNIT_SIZE, x*UNIT_SIZE, y*UNIT_SIZE+ UNIT_SIZE);
+				}
+			}
+		}
 	}
-	
+	/**
+	 * Method that draws the Components
+	 */
 	public void paintComponent(Graphics g){
 		super.paintComponent(g);
 		drawBoard(g);
+		player(g);
 	}
 	
 }

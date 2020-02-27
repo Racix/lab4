@@ -10,6 +10,8 @@ import lab4.client.GomokuClient;
 
 /**
  * Represents the state of a game
+ * 
+ * @author Abboshon Hamraliev & Adam Joakim Hedberg
  */
 
 public class GomokuGameState extends Observable implements Observer{
@@ -68,36 +70,24 @@ public class GomokuGameState extends Observable implements Observer{
 	 * @param y the y coordinate
 	 */
 	public void move(int x, int y){
-		if (currentState == FINISHED) {
-			message = "YOU CANT MOVE THE GAME IS FINISHED";
-		}
-		else if (currentState == NOT_STARTED) {
-			message = "YOU CANT MOVE WHEN THER IS NO ONGOING GAME";
-		}
-		else if (currentState == OTHER_TURN) {
-			message = "ITS NOT YOUR TURN";
-		}
-		else {
+		if(currentState == MY_TURN && gameGrid.move(x, y,GameGrid.ME )) {
+			client.sendMoveMessage(x,y);
 			
-			// inte säker att de fungerar   
-			if (gameGrid.move(x, y,GameGrid.ME )==true ){
-				message = "Empty spot no more";
-				setChanged();
-				notifyObservers();
+			if (gameGrid.isWinner(GameGrid.ME)) {
+				currentState = FINISHED;
+				message = "You won the game";
+			} else {
+				message = "You have made a move, opponents turn";
 				currentState = OTHER_TURN;
-				if (gameGrid.isWinner(GameGrid.ME)==true) {
-					message = "You won the game"; 
-					setChanged();
-					notifyObservers();
-				}
 			}
-			else {
-				message = "ocipide spot";
-				setChanged();
-				notifyObservers();
-			}
-			}
-			
+			setChanged();
+			notifyObservers();
+		}else if (currentState == OTHER_TURN) {
+			message = "ITS NOT YOUR TURN";
+			getMessageString();
+		} 
+		setChanged();
+		notifyObservers();
 		}
 	
 	
@@ -107,7 +97,8 @@ public class GomokuGameState extends Observable implements Observer{
 	public void newGame(){
 		gameGrid.clearGrid();
 		currentState = OTHER_TURN;
-		message = "NEW GAME STARTED by you";
+		message = "NEW GAME STARTED, opponents turn";
+		client.sendNewGameMessage();
 		setChanged();
 		notifyObservers();
 	}
@@ -119,7 +110,7 @@ public class GomokuGameState extends Observable implements Observer{
 	public void receivedNewGame(){
 		gameGrid.clearGrid();
 		currentState = MY_TURN;
-		message = "NEW GAME STATRED By the uther player";
+		message = "NEW GAME STATRED, your turn";
 		setChanged();
 		notifyObservers();
 	}
@@ -142,6 +133,7 @@ public class GomokuGameState extends Observable implements Observer{
 	public void disconnect(){
 		gameGrid.clearGrid();
 		currentState = NOT_STARTED;
+		client.disconnect();
 		message = "You have left the room";
 		setChanged();
 		notifyObservers();		
@@ -154,34 +146,18 @@ public class GomokuGameState extends Observable implements Observer{
 	 * @param y The y coordinate of the move
 	 */
 	public void receivedMove(int x, int y){
-		if (currentState == FINISHED) {
-			message = "YOU CANT MOVE THE GAME IS FINISHED";
+		gameGrid.move(x, y, GameGrid.OTHER);
+		
+		if(gameGrid.isWinner(GameGrid.OTHER)) {
+			currentState = FINISHED;
+			message = "Opponent has won";
+		} else {
+			currentState = MY_TURN;
+			message = "Opponent made a move, your turn";
 		}
-		else if (currentState == NOT_STARTED) {
-			message = "YOU CANT MOVE WHEN THER IS NO ONGOING GAME";
-		}
-		else if (currentState == MY_TURN) {
-			message = "ITS NOT YOUR TURN";
-		}
-		else {
-			
-			if (gameGrid.move(x, y,GameGrid.OTHER )==true ){
-				message = "Empty spot no more";
-				setChanged();
-				notifyObservers();
-				currentState = OTHER_TURN;
-				if (gameGrid.isWinner(GameGrid.OTHER)==true) {
-					message = "OTHER won the game"; 
-					setChanged();
-					notifyObservers();
-				}
-			}
-			else {
-				message = "ocipide spot";
-				setChanged();
-				notifyObservers();
-			}
-			}
+		
+		setChanged();
+		notifyObservers();
 			
 		}
 	

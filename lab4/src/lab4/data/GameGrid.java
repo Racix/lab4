@@ -5,6 +5,7 @@ import java.util.Observable;
 
 /**
  * Represents the 2-d game grid
+ * @author Abboshon Hamraliev & Adam Joakim Hedberg
  */
 
 public class GameGrid extends Observable{
@@ -87,6 +88,8 @@ public class GameGrid extends Observable{
 				gridSize[y][x] = EMPTY;
 			}
 		}
+		setChanged();
+		notifyObservers();
 	}
 	
 	/**
@@ -111,6 +114,7 @@ public class GameGrid extends Observable{
 						xcount = 0;
 					}
 				} else {
+					System.out.println("컴");
 					return true;
 				}
 				
@@ -121,6 +125,7 @@ public class GameGrid extends Observable{
 						ycount = 0;
 					}
 				}else {
+					System.out.println("컴");
 					return true;
 				}
 				if(diaRcount != INROW) {
@@ -139,12 +144,14 @@ public class GameGrid extends Observable{
 									diaRcount = 0;
 								}
 							} else {
+								System.out.println("컴");
 								return true;
 							}
 						}	
 					}
 					diaRcount = 0;
 				} else {
+					System.out.println("컴");
 					return true;
 				}
 				if (diaLcount != INROW) {
@@ -163,24 +170,20 @@ public class GameGrid extends Observable{
 									diaLcount = 0;
 								}
 							} else {
+								System.out.println("컴");
 								return true;
 							}
 						}
 					}
 					diaLcount = 0;
 				}else {
+					System.out.println("컴");
 					return true;
 				}
 			}
 			
 		}
 		return false;
-	}
-	
-	public static void main(String[] args) {
-		GameGrid test = new GameGrid(10);
-		System.out.println(test.isWinner(ME));
-		System.out.println(test.getSize());
 	}
 	
 }
